@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amani.Dev — Creative Web Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { 
+      height: 100%; 
+      background: #050505; 
+      color: #fff; 
+      font-family: 'Inter Tight', sans-serif;
+      overflow-x: hidden;
+    }
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.12;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    main {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+    }
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8vw;
+      position: relative;
+    }
+    .side-text {
+      font-size: clamp(14px, 1.4vw, 18px);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1.2s ease forwards;
+    }
+    .side-text.left { animation-delay: 1.2s; }
+    .side-text.right { animation-delay: 1.5s; text-align: right; }
+    .portrait-wrap {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(42vw, 520px);
+      height: min(56vh, 620px);
+      pointer-events: none;
+    }
+    .portrait {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      opacity: 0;
+      animation: portraitIn 2s ease 0.8s forwards;
+      border-radius: 2px;
+    }
+    @keyframes portraitIn {
+      to { opacity: 0.85; }
+    }
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1s ease 2s forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    section {
+      min-height: 100vh;
+      padding: 12vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .section-label {
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 2rem;
+    }
+    h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(48px, 8vw, 120px);
+      font-weight: 400;
+      line-height: 0.9;
+      margin-bottom: 2rem;
+    }
+    .bio {
+      max-width: 560px;
+      font-size: 18px;
+      line-height: 1.6;
+      color: #ccc;
+      font-weight: 300;
+    }
+    .works {
+      display: grid;
+      gap: 8vh;
+    }
+    .work-item {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4vw;
+      align-items: center;
+    }
+    .work-item img {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      filter: grayscale(60%);
+      transition: all 0.6s ease;
+    }
+    .work-item:hover img {
+      filter: grayscale(0%);
+      transform: scale(1.02);
+    }
+    .work-info h3 {
+      font-size: 32px;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    .work-info p {
+      color: #aaa;
+      line-height: 1.6;
+      max-width: 400px;
+    }
+    .contact-section {
+      text-align: center;
+    }
+    .contact-section h2 {
+      margin-bottom: 3rem;
+    }
+    .email {
+      font-size: clamp(28px, 4vw, 56px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: #fff;
+      border-bottom: 1px solid #333;
+      padding-bottom: 8px;
+      transition: border-color 0.3s;
+    }
+    .email:hover { border-color: #fff; }
+    .footer {
+      padding: 4vh 8vw;
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #666;
+    }
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; justify-content: center; text-align: center; gap: 3rem; }
+      .side-text.right { text-align: center; }
+      .portrait-wrap { position: relative; left: auto; top: auto; transform: none; width: 70vw; height: 50vh; margin: 2rem 0; }
+      .work-item { grid-template-columns: 1fr; }
+      .footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+  <div class="noise"></div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="side-text left">Amani.Dev</div>
+      <div class="portrait-wrap">
+        <img src="amani-particles-v2.png" alt="Amani" class="portrait">
+      </div>
+      <div class="side-text right">Creative Web Developer</div>
+      <div class="scroll-hint">Scroll</div>
+    </section>
+
+    <!-- ABOUT -->
+    <section>
+      <p class="section-label">À propos</p>
+      <h2>Je transforme<br>les idées en<br>expériences.</h2>
+      <p class="bio">
+        Développeur web créatif, je conçois des interfaces performantes et immersives. 
+        Mon approche mêle rigueur technique et sensibilité visuelle pour créer des sites qui marquent.
+      </p>
+    </section>
+
+    <!-- WORKS -->
+    <section>
+      <p class="section-label">Selected Works</p>
+      <div class="works">
+        <div class="work-item">
+          <img src="imagine_images/mJDlk.jpg" alt="Nexus">
+          <div class="work-info">
+            <h3>Nexus Dashboard</h3>
+            <p>Plateforme analytique SaaS avec visualisations en temps réel et architecture scalable.</p>
+          </div>
+        </div>
+        <div class="work-item">
+          <img src="imagine_images/567Jz.jpg" alt="Aurora">
+          <div class="work-info">
+            <h3>Aurora Store</h3>
+            <p>Expérience e-commerce premium axée sur le design sonore et l’interaction fluide.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact-section">
+      <p class="section-label">Contact</p>
+      <h2>Parlons<br>de ton projet.</h2>
+      <a href="mailto:hello@amani.dev" class="email">hello@amani.dev</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Amani.Dev — © 2026</span>
+    <span>Built with passion & particles</span>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // Particle background
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    const particleCount = 4000;
+    const positions = new Float32Array(particleCount * 3);
+    const velocities = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 40;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+      velocities[i * 3] = (Math.random() - 0.5) * 0.02;
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
+      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01;
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 0.035,
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.6,
+      sizeAttenuation: true
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    camera.position.z = 15;
+
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const pos = particles.geometry.attributes.position.array;
+      for (let i = 0; i < particleCount; i++) {
+        pos[i * 3] += velocities[i * 3];
+        pos[i * 3 + 1] += velocities[i * 3 + 1];
+        pos[i * 3 + 2] += velocities[i * 3 + 2];
+
+        // Soft boundaries
+        if (Math.abs(pos[i * 3]) > 20) velocities[i * 3] *= -1;
+        if (Math.abs(pos[i * 3 + 1]) > 20) velocities[i * 3 + 1] *= -1;
+      }
+      particles.geometry.attributes.position.needsUpdate = true;
+
+      // Subtle mouse influence
+      particles.rotation.y += mouseX * 0.0005;
+      particles.rotation.x += mouseY * 0.0003;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
