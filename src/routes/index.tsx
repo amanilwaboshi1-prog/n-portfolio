@@ -60,6 +60,15 @@ const skills = [
 
 const works = [
   {
+    title: "Terra Mining",
+    role: "Site vitrine · Industrie minière",
+    copy: "Un concept de site vitrine pour une entreprise minière fictive. De l'exploration à la valorisation, avec une identité éditoriale et une expérience soignée sur téléphone comme sur grand écran.",
+    tags: ["HTML", "CSS", "JavaScript", "Responsive", "UI"],
+    image: "/work-terra.webp",
+    live: "/terra/index.html",
+    source: "https://github.com/amanilwaboshi1-prog/terra-mining",
+  },
+  {
     title: "VELORA",
     role: "Expérience automobile · Kolwezi",
     copy: "Un site vitrine de location automobile à Kolwezi, avec une ouverture animée, une interface adaptée au téléphone et à la tablette, et une simulation de location avec estimation du prix.",
