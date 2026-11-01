@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ParticlePortrait } from "@/components/particle-portrait";
 import { SplitText } from "@/components/split-text";
+import { SelectedProjects } from "@/components/selected-projects";
 
 export const Route = createFileRoute("/")({ component: Home });
 
@@ -313,44 +314,7 @@ function Home() {
         </div>
       </section>
 
-      <section id="projets" className="rise border-t border-line px-6 py-24 md:px-16 md:py-36">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <p className="text-[11px] tracking-[0.35em] text-mute uppercase">Projets</p>
-            <h2 className="mt-6 max-w-3xl font-serif text-5xl leading-[0.95] text-paper md:text-7xl">
-              Des projets concrets, pas seulement des promesses.
-            </h2>
-          </div>
-          <a href={github} target="_blank" rel="noopener noreferrer" className="text-sm text-paper">
-            Voir GitHub ↗
-          </a>
-        </div>
-        <div className="works">
-          {works.map((work, index) => (
-            <article key={work.title} className="work">
-              <a className="project-frame work-visual block" href={work.live} target="_blank" rel="noopener noreferrer">
-                <img src={work.image} alt={work.title} className="project-shot" />
-                <span className="work-index">0{index + 1}</span>
-              </a>
-              <div className="work-copy md:col-span-4">
-                <p className="text-[11px] tracking-[0.28em] text-mute uppercase">{work.role}</p>
-                <h3 className="mt-3 font-serif text-4xl text-paper">{work.title}</h3>
-                <p className="mt-4 leading-relaxed text-mute">{work.copy}</p>
-                <p className="mt-4 text-xs tracking-[0.16em] text-paper uppercase">{work.tags.join("  ·  ")}</p>
-                <div className="mt-6 flex gap-5 text-sm">
-                  <a href={work.live} target="_blank" rel="noopener noreferrer" className="text-paper">
-                    Voir le projet ↗
-                  </a>
-                  <a href={work.source} target="_blank" rel="noopener noreferrer" className="text-mute">
-                    Code source ↗
-                  </a>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-        <p className="mt-16 text-sm text-mute">D’autres projets arrivent.</p>
-      </section>
+      <SelectedProjects projects={works} githubUrl={github} />
 
       <section id="contact" className="rise border-t border-line px-6 py-28 md:px-16 md:py-40">
         <p className="text-[11px] tracking-[0.35em] text-mute uppercase">Contact</p>
