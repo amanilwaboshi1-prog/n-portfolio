@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500&display=swap");
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: false;
+  include: button, badge;
+  prefix: daisy-;
+  logs: false;
+}
 
 @theme {
   --color-ink: #070708;
@@ -132,34 +138,6 @@
   }
 }
 
-.project-frame {
-  overflow: hidden;
-  position: relative;
-}
-.project-shot {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  transform: scale(1.06);
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.rise.is-in .project-shot {
-  animation: shot-in 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.project-frame:hover .project-shot {
-  transform: scale(1);
-}
-@keyframes shot-in {
-  from {
-    clip-path: inset(14% 8% 14% 8%);
-    transform: scale(1.08);
-  }
-  to {
-    clip-path: inset(0);
-    transform: scale(1.06);
-  }
-}
-
 .menu-panel {
   position: fixed;
   inset: 0;
@@ -204,29 +182,6 @@
   opacity: calc(1 - var(--hero, 0) * 1.2);
 }
 
-.works {
-  display: flex;
-  flex-direction: column;
-  gap: 16vh;
-  margin-top: 4.5rem;
-}
-.work {
-  display: grid;
-  gap: 1.4rem;
-}
-.work-visual {
-  position: relative;
-  display: block;
-}
-.work-index {
-  position: absolute;
-  left: 1rem;
-  bottom: 0.8rem;
-  font-family: var(--font-serif);
-  font-size: 2.4rem;
-  color: #f3f1ec;
-  text-shadow: 0 8px 24px #070708;
-}
 .skill-card {
   opacity: 0;
   transform: translateY(22px);
@@ -238,21 +193,7 @@
 .rise.is-in .skill-card:nth-child(3) { animation-delay: 0.16s; }
 .rise.is-in .skill-card:nth-child(4) { animation-delay: 0.24s; }
 
-@media (min-width: 900px) {
-  .work {
-    grid-template-columns: 1.35fr 0.75fr;
-    align-items: center;
-    gap: 4vw;
-  }
-}
 @media (max-width: 899px) {
-  .works {
-    gap: 5rem;
-    margin-top: 2.5rem;
-  }
-  .project-shot {
-    aspect-ratio: 4 / 5;
-  }
   #accueil canvas {
     transform: translateY(calc(var(--hero, 0) * 4vh)) scale(calc(1 - var(--hero, 0) * 0.16));
   }
@@ -261,8 +202,6 @@
 @media (prefers-reduced-motion: reduce) {
   .split-char,
   .rise,
-  .work-visual,
-  .work-copy,
   .skill-card,
   #accueil canvas,
   .hero-copy {
